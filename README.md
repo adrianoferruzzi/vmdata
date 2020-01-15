@@ -11,8 +11,8 @@ Os ambientes virtuais foram implementados com as seguintes configurações:</br>
   2 - vm-2 : 20 threads, 30GB de memória e 100GB de disco; </br>
   3 - vm-3 : 10 threads, 15GB de memória e 100GB de disco. </br>
 
-O software R foi utilizado para a análise dos resultados dos cálculos de desempenho, assim como, para a criação dos gráficos. Os  arquivos utilizados no projeto estão dipostos nos seguintes diretórios:</br>
+O software R foi utilizado para a análise dos resultados de desempenho, assim como, para a criação dos gráficos. Os arquivos utilizados no projeto estão dispostos nos seguintes diretórios:</br>
 
- <b> ScriptsR/ </b> - Scripts em R utilizados no trabalhos; </br>
- <b> Tabelas/ </b> - Tabelas com os dados obtidos nos banchmarks; </br>
+ <b> ScriptsR/ </b> - Scripts R utilizados no trabalho; </br>
+ <b> Tabelas/ </b> - Tabelas com os dados obtidos nos benchmarks; </br>
  <b> Graficos/ </b> - Gráficos gerados a partir dos scripts e dos dados obtidos. </br>
