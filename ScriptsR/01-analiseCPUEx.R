@@ -34,7 +34,8 @@ cpuKvmEx <- ggplot(tabelaKvm, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, gr
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
-  ggtitle("Desempenho do KVM") +
+  scale_fill_manual(values=c("#756bb1", "#bcbddc", "#efedf5")) +
+  labs(title="Desempenho do KVM",x="CPUs", y = "Tempo Médio (seg)")+
   ylim(0, 115) +
   theme_bw(base_size = 20) 
 ggsave(filename = "../Graficos/CPU/01cpuKvmEx.png", width = 10, height = 7, dpi = 300) 
@@ -60,7 +61,8 @@ cpuXenEx <- ggplot(tabelaXen, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, gr
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
-  ggtitle("Desempenho do Xen") +
+  labs(title="Desempenho do Xen",x="CPUs", y = "Tempo Médio (seg)") +
+  scale_fill_manual(values=c("#31a354", "#a1d99b", "#e5f5e0")) +
   ylim(0, 115) +
   theme_bw(base_size = 20) 
 ggsave(filename = "../Graficos/CPU/02cpuXenEx.png", width = 10, height = 7, dpi = 300) 
@@ -93,7 +95,9 @@ cpuComparaEx <- ggplot(tabelaComparada, aes(fill = Ambiente, x = CPUs, y = Tempo
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
+  labs(title="Desempenho dos Ambientes Comparados",x="CPUs", y = "Tempo Médio (seg)") +
   ggtitle("Desempenho dos Ambientes Comparados") +
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   ylim(0, 115) +
   theme_bw(base_size = 20) 
 ggsave(filename = "../Graficos/CPU/03cpuComparaEx.png", width = 10, height = 7, dpi = 300) 
@@ -103,8 +107,9 @@ ggsave(filename = "../Graficos/CPU/03cpuComparaEx.png", width = 10, height = 7, 
 cpuCoeficienteEx <- ggplot(tabelaComparada, aes(fill = Ambiente, x = CPUs, y = Coeficiente_Variacao, group = Ambiente)) +
   geom_bar(position = 'dodge', stat = 'identity') +
   ggtitle("Coefiente de Variação dos Resultados") +
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   theme_bw(base_size = 20) +
-  scale_y_continuous(limits = c(0,1), labels = scales::percent) 
+  scale_y_continuous(limits = c(0,0.2), labels = scales::percent) 
 ggsave(filename = "../Graficos/CPU/05cpuCoeficienteEx.png", width = 10, height = 7, dpi = 300)
 
 
@@ -119,6 +124,7 @@ tabelaComparada$CPUs <- factor(tabelaComparada$CPUs, levels = c(unique(tabelaCom
 cpuBoxEx <- ggplot(tabelaComparada, aes(x=CPUs, y=Tempo, fill=Ambiente)) + 
   geom_boxplot(outlier.colour="red", outlier.shape=9, outlier.size=2) +
   labs(title="Variação do Tempo de Desempenho",x="CPUs", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/CPU/04cpuBoxEx.png", width = 10, height = 7, dpi = 300)
 
@@ -165,25 +171,28 @@ tabelaFreq$CPUs <- factor(tabelaFreq$CPUs, levels = c(unique(tabelaFreq$CPUs)[or
 
 ### Plot: bitmap de alcance de desempenho com o tempo Nativo 
 cpuAlcanceEx <- ggplot(tabelaFreq, aes(fill = Ambiente, x = CPUs, y = Desempenho, group = Ambiente, colour = Ambiente)) +
-  geom_line(position = 'dodge', stat = 'identity') +
+  geom_line(position = 'dodge', stat = 'identity', size=2) +
   ggtitle("Alcance de Desempenho") +
   theme_bw(base_size = 20) +
+  scale_color_manual(values=c("#756bb1", "#31a354")) +
   scale_y_continuous(labels = scales::percent)
 ggsave(filename = "../Graficos/CPU/06cpuAlcanceEx.png", width = 10, height = 7, dpi = 300) 
 
 ### Plot: bitmap de alcance de desempenho com o tempo Nativo + 5% de overhead
 cpuAlcanceEx5 <- ggplot(tabelaFreq, aes(fill = Ambiente, x = CPUs, y = Desempenho5, group = Ambiente, colour = Ambiente)) +
-  geom_line(position = 'dodge', stat = 'identity') +
+  geom_line(position = 'dodge', stat = 'identity', size=2) +
   ggtitle("Alcance de Desempenho com 5% de Overhead") +
   theme_bw(base_size = 20) +
+  scale_color_manual(values=c("#756bb1", "#31a354")) +
   scale_y_continuous(labels = scales::percent)
 ggsave(filename = "../Graficos/CPU/07cpuAlcanceEx5.png", width = 10, height = 7, dpi = 300) 
 
 ### Plot: bitmap de alcance de desempenho com o tempo Nativo + 10% de overhead
 cpuAlcanceEx10 <- ggplot(tabelaFreq, aes(fill = Ambiente, x = CPUs, y = Desempenho10, group = Ambiente, colour = Ambiente)) +
-  geom_line(position = 'dodge', stat = 'identity') +
+  geom_line(position = 'dodge', stat = 'identity', size=2) +
   ggtitle("Alcance de Desempenho com 10% de Overhead") +
   theme_bw(base_size = 20) +
+  scale_color_manual(values=c("#756bb1", "#31a354")) +
   scale_y_continuous(limits = c(0,1), labels = scales::percent) 
 ggsave(filename = "../Graficos/CPU/08cpuAlcanceEx10.png", width = 10, height = 7, dpi = 300) 
 

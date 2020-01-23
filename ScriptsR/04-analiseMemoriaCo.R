@@ -33,6 +33,8 @@ memoriaLeituraCo <- ggplot(tabelaDados, aes(fill = Ambiente, x = GB, y = Tempo_M
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
+  labs(title="Kvm x Xen",x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Memoria/11MemoriaLeituraCo.png", width = 10, height = 7, dpi = 300) 
 
@@ -42,7 +44,8 @@ coeficienteLeituraCo <- ggplot(tabelaDados, aes(fill = Ambiente, x = GB, y = Coe
   geom_bar(position = 'dodge', stat = 'identity') +
   labs(title="Coefiente de Variação dos Resultados",x="GB", y = "Coeficiente_Variação (%)")+
   theme_bw(base_size = 20) +
-  scale_y_continuous(limits = c(0,1), labels = scales::percent) 
+  scale_fill_manual(values=c("#756bb1", "#31a354")) +
+  scale_y_continuous(limits = c(0,0.2), labels = scales::percent) 
 ggsave(filename = "../Graficos/Memoria/13MemoriaCoeficienteLeituraCo.png", width = 10, height = 7, dpi = 300)
 
 
@@ -57,6 +60,7 @@ tabelaComparada$GB <- factor(tabelaComparada$GB, levels = c(unique(tabelaCompara
 boxLeituraCo <- ggplot(tabelaComparada, aes(x=GB, y=Tempo, fill=Ambiente)) + 
   geom_boxplot(outlier.colour="red", outlier.shape=9, outlier.size=2) +
   labs(title="Variação do Tempo de Desempenho",x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Memoria/12MemoriaBoxLeituraCo.png", width = 10, height = 7, dpi = 300)
 
@@ -88,6 +92,8 @@ memoriaEscritaCo <- ggplot(tabelaEscritaCo, aes(fill = Ambiente, x = GB, y = Tem
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
+  labs(title="Kvm x Xen",x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Memoria/14MemoriaEscritaCo.png", width = 10, height = 7, dpi = 300) 
 
@@ -97,7 +103,8 @@ coeficienteEscritaCo <- ggplot(tabelaEscritaCo, aes(fill = Ambiente, x = GB, y =
   geom_bar(position = 'dodge', stat = 'identity') +
   labs(title="Coefiente de Variação dos Resultados",x="GB", y = "Coeficiente_Variação (%)")+
   theme_bw(base_size = 20) +
-  scale_y_continuous(limits = c(0,1), labels = scales::percent) 
+  scale_fill_manual(values=c("#756bb1", "#31a354")) +
+  scale_y_continuous(limits = c(0,0.2), labels = scales::percent) 
 ggsave(filename = "../Graficos/Memoria/16MemoriaCoeficienteEscritaCo.png", width = 10, height = 7, dpi = 300)
 
 
@@ -112,5 +119,6 @@ tabelaComparadaEscritaCo$GB <- factor(tabelaComparadaEscritaCo$GB, levels = c(un
 boxEscritaCo <- ggplot(tabelaComparadaEscritaCo, aes(x=GB, y=Tempo, fill=Ambiente)) + 
   geom_boxplot(outlier.colour="red", outlier.shape=9, outlier.size=2) +
   labs(title="Variação do Tempo de Desempenho",x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Memoria/15MemoriaBoxEscritaCo.png", width = 10, height = 7, dpi = 300)

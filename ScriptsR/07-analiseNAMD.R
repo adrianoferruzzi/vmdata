@@ -35,6 +35,8 @@ namdHT <- ggplot(tabelaDadosHT, aes(fill = Ambiente, x = CPUs, y = Nanosegundos,
                 position='dodge') +
   geom_errorbar(aes(ymin=Nanosegundos - Intervalo_Confianca, ymax=Nanosegundos+Intervalo_Confianca),
                 position='dodge') +
+  labs(title="Kvm x Nativo x Xen",x="CPUs", y = "Nanossegundos")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/NAMD/01namdHT.png", width = 10, height = 7, dpi = 300) 
 
@@ -43,8 +45,9 @@ ggsave(filename = "../Graficos/NAMD/01namdHT.png", width = 10, height = 7, dpi =
 namdCoeficienteHT <- ggplot(tabelaDadosHT, aes(fill = Ambiente, x = CPUs, y = Coeficiente_Variacao, group = Ambiente)) +
   geom_bar(position = 'dodge', stat = 'identity') +
   ggtitle("Coefiente de Variação dos Resultados") +
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   theme_bw(base_size = 20) +
-  scale_y_continuous(limits = c(0,1), labels = scales::percent) 
+  scale_y_continuous(limits = c(0,0.25), labels = scales::percent) 
 ggsave(filename = "../Graficos/NAMD/03namdCoeficienteHT.png", width = 10, height = 7, dpi = 300)
 
 ### BoxPlot
@@ -56,7 +59,8 @@ tabelaComparadaHT$CPUs <- factor(tabelaComparadaHT$CPUs, levels = c(unique(tabel
 
 namdBoxHT <- ggplot(tabelaComparadaHT, aes(x=CPUs, y=Tempo, fill=Ambiente)) + 
   geom_boxplot(outlier.colour="red", outlier.shape=9, outlier.size=2) +
-  labs(title="Variação do Tempo de Desempenho",x="CPUs", y = "Nanosegundos")+
+  labs(title="Variação do Tempo de Desempenho",x="CPUs", y = "Nanossegundos")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/NAMD/02namdBoxHT.png", width = 10, height = 7, dpi = 300)
 
@@ -88,6 +92,8 @@ namdSemHT <- ggplot(tabelaDados, aes(fill = Ambiente, x = CPUs, y = Nanosegundos
                 position='dodge') +
   geom_errorbar(aes(ymin=Nanosegundos - Intervalo_Confianca, ymax=Nanosegundos+Intervalo_Confianca),
                 position='dodge') +
+  labs(title="Kvm x Nativo x Xen",x="CPUs", y = "Nanossegundos")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/NAMD/04namdSemHT.png", width = 10, height = 7, dpi = 300) 
 
@@ -96,8 +102,9 @@ ggsave(filename = "../Graficos/NAMD/04namdSemHT.png", width = 10, height = 7, dp
 namdCoeficienteSemHT <- ggplot(tabelaDados, aes(fill = Ambiente, x = CPUs, y = Coeficiente_Variacao, group = Ambiente)) +
   geom_bar(position = 'dodge', stat = 'identity') +
   ggtitle("Coefiente de Variação dos Resultados") +
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   theme_bw(base_size = 20) +
-  scale_y_continuous(limits = c(0,1), labels = scales::percent) 
+  scale_y_continuous(limits = c(0,0.25), labels = scales::percent) 
 ggsave(filename = "../Graficos/NAMD/06namdCoeficienteSemHT.png", width = 10, height = 7, dpi = 300)
 
 ### BoxPlot
@@ -109,7 +116,8 @@ tabelaComparada$CPUs <- factor(tabelaComparada$CPUs, levels = c(unique(tabelaCom
 
 namdBoxSemHT <- ggplot(tabelaComparada, aes(x=CPUs, y=Tempo, fill=Ambiente)) + 
   geom_boxplot(outlier.colour="red", outlier.shape=9, outlier.size=2) +
-  labs(title="Variação do Tempo de Desempenho",x="CPUs", y = "Nanosegundos")+
+  labs(title="Variação do Tempo de Desempenho",x="CPUs", y = "Nanossegundos")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/NAMD/05namdBoxSemHT.png", width = 10, height = 7, dpi = 300)
 

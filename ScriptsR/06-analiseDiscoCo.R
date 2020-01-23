@@ -33,6 +33,8 @@ discoLeituraCo <- ggplot(tabelaDados, aes(fill = Ambiente, x = GB, y = Tempo_Med
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
+  labs(title="Kvm x Nativo x Xen",x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1","#fdae6b", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Disco/07DiscoLeituraCo.png", width = 10, height = 7, dpi = 300) 
 
@@ -42,7 +44,8 @@ coeficienteLeituraCo <- ggplot(tabelaDados, aes(fill = Ambiente, x = GB, y = Coe
   geom_bar(position = 'dodge', stat = 'identity') +
   labs(title="Coefiente de Variação dos Resultados",x="GB", y = "Coeficiente_Variação (%)")+
   theme_bw(base_size = 20) +
-  scale_y_continuous(limits = c(0,1), labels = scales::percent) 
+  scale_fill_manual(values=c("#756bb1","#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,0.1), labels = scales::percent) 
 ggsave(filename = "../Graficos/Disco/09DiscoCoeficienteLeituraCo.png", width = 10, height = 7, dpi = 300)
 
 
@@ -57,6 +60,7 @@ tabelaComparada$GB <- factor(tabelaComparada$GB, levels = c(unique(tabelaCompara
 boxLeituraCo <- ggplot(tabelaComparada, aes(x=GB, y=Tempo, fill=Ambiente)) + 
   geom_boxplot(outlier.colour="red", outlier.shape=9, outlier.size=2) +
   labs(title="Variação do Tempo de Desempenho",x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1","#fdae6b", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Disco/08DiscoBoxLeituraCo.png", width = 10, height = 7, dpi = 300)
 
@@ -87,6 +91,8 @@ discoEscritaCo <- ggplot(tabelaEscritaCo, aes(fill = Ambiente, x = GB, y = Tempo
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
+  labs(title="Kvm x Nativo x Xen",x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1","#fdae6b", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Disco/10DiscoEscritaCo.png", width = 10, height = 7, dpi = 300) 
 
@@ -96,7 +102,8 @@ coeficienteEscritaCo <- ggplot(tabelaEscritaCo, aes(fill = Ambiente, x = GB, y =
   geom_bar(position = 'dodge', stat = 'identity') +
   labs(title="Coefiente de Variação dos Resultados",x="GB", y = "Coeficiente_Variação (%)")+
   theme_bw(base_size = 20) +
-  scale_y_continuous(limits = c(0,1), labels = scales::percent) 
+  scale_fill_manual(values=c("#756bb1","#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,0.3), labels = scales::percent) 
 ggsave(filename = "../Graficos/Disco/12DiscoCoeficienteEscritaCo.png", width = 10, height = 7, dpi = 300)
 
 
@@ -111,6 +118,7 @@ tabelaComparadaEscritaCo$GB <- factor(tabelaComparadaEscritaCo$GB, levels = c(un
 boxEscritaCo <- ggplot(tabelaComparadaEscritaCo, aes(x=GB, y=Tempo, fill=Ambiente)) + 
   geom_boxplot(outlier.colour="red", outlier.shape=9, outlier.size=2) +
   labs(title="Variação do Tempo de Desempenho",x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1","#fdae6b", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Disco/11DiscoBoxEscritaCo.png", width = 10, height = 7, dpi = 300)
 

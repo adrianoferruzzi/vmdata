@@ -35,6 +35,8 @@ gamessSemHT <- ggplot(tabelaDados, aes(fill = Ambiente, x = CPUs, y = Tempo_Medi
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
+  labs(title="Kvm x Nativo x Xen",x="CPUs", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Gamess/01gamessSemHT.png", width = 10, height = 7, dpi = 300) 
 
@@ -44,7 +46,8 @@ gamessCoeficienteSemHT <- ggplot(tabelaDados, aes(fill = Ambiente, x = CPUs, y =
   geom_bar(position = 'dodge', stat = 'identity') +
   ggtitle("Coefiente de Variação dos Resultados") +
   theme_bw(base_size = 20) +
-  scale_y_continuous(limits = c(0,1), labels = scales::percent) 
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,0.1), labels = scales::percent) 
 ggsave(filename = "../Graficos/Gamess/03gamessCoeficienteSemHT.png", width = 10, height = 7, dpi = 300)
 
 ### BoxPlot
@@ -57,6 +60,7 @@ tabelaComparada$CPUs <- factor(tabelaComparada$CPUs, levels = c(unique(tabelaCom
 gamessBoxSemHT <- ggplot(tabelaComparada, aes(x=CPUs, y=Tempo, fill=Ambiente)) + 
   geom_boxplot(outlier.colour="red", outlier.shape=9, outlier.size=2) +
   labs(title="Variação do Tempo de Desempenho",x="CPUs", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Gamess/02gamessBoxSemHT.png", width = 10, height = 7, dpi = 300)
 

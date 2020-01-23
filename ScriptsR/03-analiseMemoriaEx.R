@@ -33,6 +33,8 @@ memoriaLeituraEx <- ggplot(tabelaDados, aes(fill = Ambiente, x = GB, y = Tempo_M
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
+  labs(title="Kvm x Nativo x Xen",x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Memoria/01MemoriaLeituraEx.png", width = 10, height = 7, dpi = 300) 
 
@@ -42,6 +44,7 @@ coeficienteLeituraEx <- ggplot(tabelaDados, aes(fill = Ambiente, x = GB, y = Coe
   geom_bar(position = 'dodge', stat = 'identity') +
   labs(title="Coefiente de Variação dos Resultados",x="GB", y = "Coeficiente_Variação (%)")+
   theme_bw(base_size = 20) +
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   scale_y_continuous(limits = c(0,1), labels = scales::percent) 
 ggsave(filename = "../Graficos/Memoria/03MemoriaCoeficienteLeituraEx.png", width = 10, height = 7, dpi = 300)
 
@@ -57,6 +60,7 @@ tabelaComparada$GB <- factor(tabelaComparada$GB, levels = c(unique(tabelaCompara
 boxLeituraExclusiva <- ggplot(tabelaComparada, aes(x=GB, y=Tempo, fill=Ambiente)) + 
   geom_boxplot(outlier.colour="red", outlier.shape=9, outlier.size=2) +
   labs(title="Variação do Tempo de Desempenho",x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Memoria/02MemoriaBoxLeituraEx.png", width = 10, height = 7, dpi = 300)
 
@@ -86,6 +90,8 @@ memoriaLeituraExOutliers <- ggplot(tabelaDadosOutliers, aes(fill = Ambiente, x =
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
+  labs(title="Kvm x Nativo x Xen",x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Memoria/04MemoriaLeituraExOutliers.png", width = 10, height = 7, dpi = 300) 
 
@@ -95,6 +101,7 @@ coeficienteLeituraExOutliers <- ggplot(tabelaDadosOutliers, aes(fill = Ambiente,
   geom_bar(position = 'dodge', stat = 'identity') +
   labs(title="Coefiente de Variação dos Resultados",x="GB", y = "Coeficiente_Variação (%)")+
   theme_bw(base_size = 20) +
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   scale_y_continuous(limits = c(0,1), labels = scales::percent) 
 ggsave(filename = "../Graficos/Memoria/05MemoriaCoeficienteLeituraExOutliers.png", width = 10, height = 7, dpi = 300)
 
@@ -126,6 +133,8 @@ memoriaEscritaEx <- ggplot(tabelaEscritaEx, aes(fill = Ambiente, x = GB, y = Tem
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
+  labs(title="Kvm x Nativo x Xen",x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Memoria/06MemoriaEscritaEx.png", width = 10, height = 7, dpi = 300) 
 
@@ -135,7 +144,8 @@ coeficienteEscritaEx <- ggplot(tabelaEscritaEx, aes(fill = Ambiente, x = GB, y =
   geom_bar(position = 'dodge', stat = 'identity') +
   labs(title="Coefiente de Variação dos Resultados",x="GB", y = "Coeficiente_Variação (%)")+
   theme_bw(base_size = 20) +
-  scale_y_continuous(limits = c(0,1), labels = scales::percent) 
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,0.3), labels = scales::percent) 
 ggsave(filename = "../Graficos/Memoria/08MemoriaCoeficienteEscritaEx.png", width = 10, height = 7, dpi = 300)
 
 
@@ -150,6 +160,7 @@ tabelaComparadaEscritaEx$GB <- factor(tabelaComparadaEscritaEx$GB, levels = c(un
 boxEscritaEx <- ggplot(tabelaComparadaEscritaEx, aes(x=GB, y=Tempo, fill=Ambiente)) + 
   geom_boxplot(outlier.colour="red", outlier.shape=9, outlier.size=2) +
   labs(title="Variação do Tempo de Desempenho",x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Memoria/07MemoriaBoxEscritaEx.png", width = 10, height = 7, dpi = 300)
 
@@ -179,6 +190,8 @@ memoriaEscritaExOutliers <- ggplot(tabelaEscritaExOutliers, aes(fill = Ambiente,
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
+  labs(title="Kvm x Nativo x Xen",x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Memoria/09MemoriaEscritaExOutliers.png", width = 10, height = 7, dpi = 300) 
 
@@ -188,7 +201,8 @@ coeficienteEscritaExOutliers <- ggplot(tabelaEscritaExOutliers, aes(fill = Ambie
   geom_bar(position = 'dodge', stat = 'identity') +
   labs(title="Coefiente de Variação dos Resultados",x="GB", y = "Coeficiente_Variação (%)")+
   theme_bw(base_size = 20) +
-  scale_y_continuous(limits = c(0,1), labels = scales::percent) 
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,0.3), labels = scales::percent) 
 ggsave(filename = "../Graficos/Memoria/10MemoriaCoeficienteEscritaExOutliers.png", width = 10, height = 7, dpi = 300)
 
 

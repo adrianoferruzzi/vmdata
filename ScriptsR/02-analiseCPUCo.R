@@ -34,7 +34,8 @@ cpuKvmCo <- ggplot(tabelaKvm, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, gr
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
-  ggtitle("Desempenho do KVM") +
+  scale_fill_manual(values=c("#bcbddc", "#efedf5")) +
+  labs(title="Desempenho do KVM",x="CPUs", y = "Tempo Médio (seg)")+
   ylim(0, 115) +
   theme_bw(base_size = 20) 
 ggsave(filename = "../Graficos/CPU/09cpuKvmCo.png", width = 10, height = 7, dpi = 300) 
@@ -60,7 +61,8 @@ cpuXenCo <- ggplot(tabelaXen, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, gr
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
-  ggtitle("Desempenho do Xen") +
+  labs(title="Desempenho do Xen",x="CPUs", y = "Tempo Médio (seg)") +
+  scale_fill_manual(values=c("#a1d99b", "#e5f5e0")) +
   ylim(0, 115) +
   theme_bw(base_size = 20) 
 ggsave(filename = "../Graficos/CPU/10cpuXenCo.png", width = 10, height = 7, dpi = 300) 
@@ -93,7 +95,8 @@ cpuComparaCo <- ggplot(tabelaComparada, aes(fill = Ambiente, x = CPUs, y = Tempo
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
-  ggtitle("Desempenho dos Ambientes Comparados") +
+  scale_fill_manual(values=c("#bcbddc", "#efedf5", "#a1d99b", "#e5f5e0")) +
+  labs(title="KVM x Xen",x="CPUs", y = "Tempo Médio (seg)")+
   ylim(0, 115) +
   theme_bw(base_size = 20) 
 ggsave(filename = "../Graficos/CPU/11cpuComparaCo.png", width = 10, height = 7, dpi = 300) 
@@ -103,8 +106,9 @@ ggsave(filename = "../Graficos/CPU/11cpuComparaCo.png", width = 10, height = 7, 
 cpuCoeficienteCo <- ggplot(tabelaComparada, aes(fill = Ambiente, x = CPUs, y = Coeficiente_Variacao, group = Ambiente)) +
   geom_bar(position = 'dodge', stat = 'identity') +
   ggtitle("Coefiente de Variação dos Resultados") +
+  scale_fill_manual(values=c("#bcbddc", "#efedf5", "#a1d99b", "#e5f5e0")) +
   theme_bw(base_size = 20) +
-  scale_y_continuous(limits = c(0,1), labels = scales::percent) 
+  scale_y_continuous(limits = c(0,0.2), labels = scales::percent) 
 ggsave(filename = "../Graficos/CPU/13cpuCoeficienteCo.png", width = 10, height = 7, dpi = 300)
 
 
@@ -119,6 +123,7 @@ tabelaComparada$CPUs <- factor(tabelaComparada$CPUs, levels = c(unique(tabelaCom
 cpuBoxCo <- ggplot(tabelaComparada, aes(x=CPUs, y=Tempo, fill=Ambiente)) + 
   geom_boxplot(outlier.colour="red", outlier.shape=9, outlier.size=2) +
   labs(title="Variação do Tempo de Desempenho",x="CPUs", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#bcbddc", "#efedf5", "#a1d99b", "#e5f5e0")) +
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/CPU/12cpuBoxCo.png", width = 10, height = 7, dpi = 300)
 
@@ -167,7 +172,8 @@ cpuComparaKvm23 <- ggplot(tabelaKvm23, aes(fill = Ambiente, x = CPUs, y = Tempo_
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
-  ggtitle("Kvm Exclusivo x Kvm Compartilhado") +
+  labs(title="KVM Exclusivo x KVM Compartilhado",x="CPUs", y = "Tempo Médio (seg)") +
+  scale_fill_manual(values=c("#bcbddc", "#fc9272", "#efedf5", "#fee0d2")) +
   ylim(0, 115) +
   theme_bw(base_size = 20) 
 ggsave(filename = "../Graficos/CPU/14cpuComparaKvm23.png", width = 10, height = 7, dpi = 300)
@@ -194,7 +200,8 @@ cpuComparaXen23 <- ggplot(tabelaXen23, aes(fill = Ambiente, x = CPUs, y = Tempo_
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
-  ggtitle("Xen Exclusivo x Xen Compartilhado") +
+  labs(title="Xen Exclusivo x Xen Compartilhado",x="CPUs", y = "Tempo Médio (seg)") +
+  scale_fill_manual(values=c("#a1d99b", "#9ecae1", "#e5f5e0", "#deebf7")) +
   ylim(0, 115) +
   theme_bw(base_size = 20) 
 ggsave(filename = "../Graficos/CPU/15cpuComparaXen23.png", width = 10, height = 7, dpi = 300)
