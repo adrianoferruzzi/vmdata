@@ -35,6 +35,7 @@ memoriaLeituraEx <- ggplot(tabelaDados, aes(fill = Ambiente, x = GB, y = Tempo_M
                 position='dodge') +
   labs(title="Kvm x Nativo x Xen",x="GB", y = "Tempo (seg)")+
   scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,30))+
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Memoria/01MemoriaLeituraEx.png", width = 10, height = 7, dpi = 300) 
 
@@ -92,6 +93,7 @@ memoriaLeituraExOutliers <- ggplot(tabelaDadosOutliers, aes(fill = Ambiente, x =
                 position='dodge') +
   labs(title="Kvm x Nativo x Xen",x="GB", y = "Tempo (seg)")+
   scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,30))+
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Memoria/04MemoriaLeituraExOutliers.png", width = 10, height = 7, dpi = 300) 
 
@@ -135,6 +137,7 @@ memoriaEscritaEx <- ggplot(tabelaEscritaEx, aes(fill = Ambiente, x = GB, y = Tem
                 position='dodge') +
   labs(title="Kvm x Nativo x Xen",x="GB", y = "Tempo (seg)")+
   scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,30))+
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Memoria/06MemoriaEscritaEx.png", width = 10, height = 7, dpi = 300) 
 

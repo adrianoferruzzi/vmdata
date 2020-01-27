@@ -37,6 +37,7 @@ namdHT <- ggplot(tabelaDadosHT, aes(fill = Ambiente, x = CPUs, y = Nanosegundos,
                 position='dodge') +
   labs(title="Kvm x Nativo x Xen",x="CPUs", y = "Nanossegundos")+
   scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,2.6))+
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/NAMD/01namdHT.png", width = 10, height = 7, dpi = 300) 
 
@@ -94,6 +95,7 @@ namdSemHT <- ggplot(tabelaDados, aes(fill = Ambiente, x = CPUs, y = Nanosegundos
                 position='dodge') +
   labs(title="Kvm x Nativo x Xen",x="CPUs", y = "Nanossegundos")+
   scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,2.6))+
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/NAMD/04namdSemHT.png", width = 10, height = 7, dpi = 300) 
 

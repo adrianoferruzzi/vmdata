@@ -34,7 +34,7 @@ cpuKvmCo <- ggplot(tabelaKvm, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, gr
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
-  scale_fill_manual(values=c("#bcbddc", "#efedf5")) +
+  scale_fill_manual(values=c("#6a51a3", "#9e9ac8")) +
   labs(title="Desempenho do KVM",x="CPUs", y = "Tempo Médio (seg)")+
   ylim(0, 115) +
   theme_bw(base_size = 20) 
@@ -62,7 +62,7 @@ cpuXenCo <- ggplot(tabelaXen, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, gr
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
   labs(title="Desempenho do Xen",x="CPUs", y = "Tempo Médio (seg)") +
-  scale_fill_manual(values=c("#a1d99b", "#e5f5e0")) +
+  scale_fill_manual(values=c("#238b45", "#74c476")) +
   ylim(0, 115) +
   theme_bw(base_size = 20) 
 ggsave(filename = "../Graficos/CPU/10cpuXenCo.png", width = 10, height = 7, dpi = 300) 
@@ -95,7 +95,7 @@ cpuComparaCo <- ggplot(tabelaComparada, aes(fill = Ambiente, x = CPUs, y = Tempo
                 position='dodge') +
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
-  scale_fill_manual(values=c("#bcbddc", "#efedf5", "#a1d99b", "#e5f5e0")) +
+  scale_fill_manual(values=c("#6a51a3", "#9e9ac8", "#238b45", "#74c476")) +
   labs(title="KVM x Xen",x="CPUs", y = "Tempo Médio (seg)")+
   ylim(0, 115) +
   theme_bw(base_size = 20) 
@@ -106,7 +106,7 @@ ggsave(filename = "../Graficos/CPU/11cpuComparaCo.png", width = 10, height = 7, 
 cpuCoeficienteCo <- ggplot(tabelaComparada, aes(fill = Ambiente, x = CPUs, y = Coeficiente_Variacao, group = Ambiente)) +
   geom_bar(position = 'dodge', stat = 'identity') +
   ggtitle("Coefiente de Variação dos Resultados") +
-  scale_fill_manual(values=c("#bcbddc", "#efedf5", "#a1d99b", "#e5f5e0")) +
+  scale_fill_manual(values=c("#6a51a3", "#9e9ac8", "#238b45", "#74c476")) +
   theme_bw(base_size = 20) +
   scale_y_continuous(limits = c(0,0.2), labels = scales::percent) 
 ggsave(filename = "../Graficos/CPU/13cpuCoeficienteCo.png", width = 10, height = 7, dpi = 300)
@@ -173,7 +173,7 @@ cpuComparaKvm23 <- ggplot(tabelaKvm23, aes(fill = Ambiente, x = CPUs, y = Tempo_
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
   labs(title="KVM Exclusivo x KVM Compartilhado",x="CPUs", y = "Tempo Médio (seg)") +
-  scale_fill_manual(values=c("#bcbddc", "#fc9272", "#efedf5", "#fee0d2")) +
+  scale_fill_manual(values=c("#5e3c99", "#b2abd2", "#e66101", "#fdb863")) +
   ylim(0, 115) +
   theme_bw(base_size = 20) 
 ggsave(filename = "../Graficos/CPU/14cpuComparaKvm23.png", width = 10, height = 7, dpi = 300)
@@ -201,7 +201,7 @@ cpuComparaXen23 <- ggplot(tabelaXen23, aes(fill = Ambiente, x = CPUs, y = Tempo_
   geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
                 position='dodge') +
   labs(title="Xen Exclusivo x Xen Compartilhado",x="CPUs", y = "Tempo Médio (seg)") +
-  scale_fill_manual(values=c("#a1d99b", "#9ecae1", "#e5f5e0", "#deebf7")) +
+  scale_fill_manual(values=c("#7b3294", "#c2a5cf", "#008837", "#a6dba0")) +
   ylim(0, 115) +
   theme_bw(base_size = 20) 
 ggsave(filename = "../Graficos/CPU/15cpuComparaXen23.png", width = 10, height = 7, dpi = 300)

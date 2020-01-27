@@ -35,6 +35,7 @@ memoriaLeituraCo <- ggplot(tabelaDados, aes(fill = Ambiente, x = GB, y = Tempo_M
                 position='dodge') +
   labs(title="Kvm x Xen",x="GB", y = "Tempo (seg)")+
   scale_fill_manual(values=c("#756bb1", "#31a354")) +
+  scale_y_continuous(limits = c(0,15))+
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Memoria/11MemoriaLeituraCo.png", width = 10, height = 7, dpi = 300) 
 
@@ -94,6 +95,7 @@ memoriaEscritaCo <- ggplot(tabelaEscritaCo, aes(fill = Ambiente, x = GB, y = Tem
                 position='dodge') +
   labs(title="Kvm x Xen",x="GB", y = "Tempo (seg)")+
   scale_fill_manual(values=c("#756bb1", "#31a354")) +
+  scale_y_continuous(limits = c(0,15))+
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Memoria/14MemoriaEscritaCo.png", width = 10, height = 7, dpi = 300) 
 

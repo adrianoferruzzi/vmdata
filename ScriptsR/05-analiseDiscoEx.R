@@ -35,6 +35,7 @@ discoLeituraEx <- ggplot(tabelaDados, aes(fill = Ambiente, x = GB, y = Tempo_Med
                 position='dodge') +
   labs(title="Kvm x Nativo x Xen",x="GB", y = "Tempo (seg)")+
   scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,200))+
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Disco/01DiscoLeituraEx.png", width = 10, height = 7, dpi = 300) 
 
@@ -93,6 +94,7 @@ discoEscritaEx <- ggplot(tabelaEscritaEx, aes(fill = Ambiente, x = GB, y = Tempo
                 position='dodge') +
   labs(title="Kvm x Nativo x Xen",x="GB", y = "Tempo (seg)")+
   scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,200))+
   theme_bw(base_size = 20)
 ggsave(filename = "../Graficos/Disco/04DiscoEscritaEx.png", width = 10, height = 7, dpi = 300) 
 
