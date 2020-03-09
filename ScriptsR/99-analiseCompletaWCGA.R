@@ -18,8 +18,6 @@ library(ggpubr)
 tabelaCpuEx <- read.table('../Tabelas/TabelaCPUEx.log',
                           header = T)
 
-tabelaKvm$CPUs <- factor(tabelaKvm$CPUs, levels = c(unique(tabelaKvm$CPUs)[order(unique(tabelaKvm$CPUs))]))
-
 ### Análise do ambiente comparado
 ### Este script considera uma comparação entre o ambiente Nativo, kvm_1 e xen_1
 ### Nesse caso, além do gráfico em barras para fazer a comparação de tempo também 

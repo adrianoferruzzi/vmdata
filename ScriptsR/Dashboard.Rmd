@@ -1,0 +1,613 @@
+---
+title: "Dashboard - Comparação de Desempenho"
+author: "Adriano Ferruzzi"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    social: menu
+    source_code: embed
+---
+
+```{r setup, include=FALSE}
+require(ggplot2)
+require(ggthemes)
+require(dplyr)
+library(stringr)
+library(readr)
+library("gridExtra")
+library(ggpubr)
+library(plotly)
+## library(plyr)
+library(flexdashboard)
+## library(tidyverse)
+
+analiseDadosCPU <- function(dados) {   
+  ### Análise do ambiente comparado
+  ### Esta funcao faz uma comparação entre os ambientes
+  ### Nesse caso, além do gráfico em barras para fazer a comparação de tempo também 
+  ### é utilizado um gráfico para apresentar o coefiente de variação.
+  ### Cria uma tabela com as Medidas de Posição e Medidas de Variação
+   tabelaDados <- dados %>%
+    group_by(CPUs, Ambiente) %>%
+    summarize(Tempo_Medio = mean(Tempo),
+            Tempo_Minimo = min(Tempo),
+            Tempo_Maximo = max(Tempo),
+            Desvio_Padrao = sd(Tempo),
+            Intervalo_Confianca = (2.042*sd(Tempo))/(sqrt(n())),
+            Coeficiente_Variacao = Desvio_Padrao/Tempo_Medio,
+    )  
+
+  tabelaDados$CPUs <- factor(tabelaDados$CPUs, levels = c(unique(tabelaDados$CPUs)[order(unique(tabelaDados$CPUs))]))
+
+  return(tabelaDados)
+}
+
+
+analiseDadosMem <- function(dados) {   
+  ### Análise do ambiente comparado
+  ### Esta funcao faz uma comparação entre os ambientes
+  ### Nesse caso, além do gráfico em barras para fazer a comparação de tempo também 
+  ### é utilizado um gráfico para apresentar o coefiente de variação.
+  ### Cria uma tabela com as Medidas de Posição e Medidas de Variação
+  tabelaDados <- dados %>%
+    group_by(GB, Ambiente) %>%
+    summarize(Tempo_Medio = mean(Tempo),
+            Tempo_Minimo = min(Tempo),
+            Tempo_Maximo = max(Tempo),
+            Desvio_Padrao = sd(Tempo),
+            Intervalo_Confianca = (2.042*sd(Tempo))/(sqrt(n())),
+            Coeficiente_Variacao = Desvio_Padrao/Tempo_Medio,
+    )  
+
+  tabelaDados$GB <- factor(tabelaDados$GB, levels = c(unique(tabelaDados$GB)[order(unique(tabelaDados$GB))]))
+
+  return(tabelaDados)
+}
+
+
+
+######################################
+## Analise de CPU Exclusiva
+######################################
+### Grafico 1 e Gráfico 3
+### Análise de desempenho do ambiente KVM
+### Esta análise considera apenas os 3 flavors do ambiente KVM 
+tabelaCpuEx <- read.table('../Tabelas/TabelaCPUEx.log', header = T)
+tabelaCpuComparaEx <- tabelaCpuEx %>%
+    filter(Ambiente == 'Xen_1' | Ambiente == 'kvm_1' | Ambiente == 'Nativo' )
+
+tabelaComparada <- analiseDadosCPU(tabelaCpuComparaEx)
+
+### Grafico 2
+### BoxPlot
+### Este gráfico tem o objetivo de verificar a variação dos dados obtidos por meio de quartis 
+### ele indica a mediana e a variabilidade fora do quartil superior, inferior e outliers
+tabelaComparada2 <- tabelaCpuEx %>%
+  filter(Ambiente == 'Xen_1' | Ambiente == 'kvm_1' | Ambiente == 'Nativo' )
+
+tabelaComparada2$CPUs <- factor(tabelaComparada2$CPUs, levels = c(unique(tabelaComparada2$CPUs)[order(unique(tabelaComparada2$CPUs))]))
+
+### Grafico 4
+### Cria a tabelaNativo com os tempo médios de desempenho 
+### Cria campos com o valor de 5% e 10% de overhead
+### OBS: A tabela tabelaDesEx.csv já foi criada anteriormente
+tabelaFreq <- read.csv('../Tabelas/tabelaDesEx.csv',  header = T)
+### Considera o desempenho virtual e o desempenho nativo com 5% e 10% de overhead
+tabelaFreq <- tabelaFreq %>%
+  group_by(CPUs, Ambiente) %>%
+  summarize(Desempenho10 = (sum(Perf10)/30))
+
+tabelaFreq$CPUs <- factor(tabelaFreq$CPUs, levels = c(unique(tabelaFreq$CPUs)[order(unique(tabelaFreq$CPUs))]))
+
+
+######################################
+## Analise de CPU Compartilhada
+######################################
+## Comparação entre os tempos com uso de CPU exclusivo e compartilhado
+## Essa parte do script faz a comparação entre todos os ambiente
+## Tempo Exclusivo x Tempo Compartilhado
+
+tabelaKvm23Xen23 <- read.csv('../Tabelas/tabelaKvmXen23Co.csv', header = T)
+
+tabelaKvm23 <-tabelaKvm23Xen23  %>%
+  filter(Ambiente == 'kvm_2_Ex' | Ambiente == 'kvm_2_Co' | Ambiente == 'kvm_3_Ex' | Ambiente == 'kvm_3_Co' )
+
+tabelaKvm23 <- analiseDadosCPU(tabelaKvm23)
+
+### Gera o data frame de comparação entre os ambientes com uso Compartilhado x Exclusivo do Xen
+tabelaXen23 <-tabelaKvm23Xen23  %>%
+  filter(Ambiente == 'Xen_2_Ex' | Ambiente == 'Xen_2_Co' | Ambiente == 'Xen_3_Ex' | Ambiente == 'Xen_3_Co' )
+
+tabelaXen23 <- analiseDadosCPU(tabelaXen23)
+
+
+######################################
+## Analise de Memoria Exclusiva
+######################################
+
+## Leitura
+tabelaMemEx <- read.table('../Tabelas/TabelaMemLeituraEx.log', header = T)
+tabelaMemEx <- analiseDadosMem(tabelaMemEx)
+
+## Escrita
+tabelaEscritaEx <- read.table('../Tabelas/TabelaMemEscritaEx.log', header = T)
+tabelaEscritaEx <- analiseDadosMem(tabelaEscritaEx)
+
+## Boxplot Leitura Ex
+tabelaBoxLeituraEx <- read.table('../Tabelas/TabelaMemLeituraEx.log', header = T)
+tabelaBoxLeituraEx$GB <- factor(tabelaBoxLeituraEx$GB, levels = c(unique(tabelaBoxLeituraEx$GB)[order(unique(tabelaBoxLeituraEx$GB))]))
+
+### BoxPlot Escrita Ex
+tabelaBoxEscritaEx <- read.table('../Tabelas/TabelaMemEscritaEx.log', header = T)
+tabelaBoxEscritaEx$GB <- factor(tabelaBoxEscritaEx$GB, levels = c(unique(tabelaBoxEscritaEx$GB)[order(unique(tabelaBoxEscritaEx$GB))]))
+
+######################################
+## Analise de Memoria Compartilhada
+######################################
+
+## Leitura
+tabelaMemLeituraCo <- read.table('../Tabelas/TabelaMemLeituraCo.log', header = T)
+tabelaMemLeituraCo <- analiseDadosMem(tabelaMemLeituraCo)
+
+## Escrita
+tabelaEscritaCo <- read.table('../Tabelas/TabelaMemEscritaCo.log', header = T)
+tabelaEscritaCo <- analiseDadosMem(tabelaEscritaCo)
+
+
+######################################
+## Analise de Disco Exclusiva
+######################################
+tabelaDiscoLeituraEx <- read.table('../Tabelas/TabelaDiscoLeituraEx.log', header = T)
+tabelaDiscoLeituraEx <- analiseDadosMem(tabelaDiscoLeituraEx)
+
+tabelaDiscoEscritaEx <- read.table('../Tabelas/TabelaDiscoEscritaEx.log', header = T)
+tabelaDiscoEscritaEx <- analiseDadosMem(tabelaDiscoEscritaEx)
+
+######################################
+## Analise de Disco Compartilhada
+######################################
+
+tabelaDiscoLeituraCo <- read.table('../Tabelas/TabelaDiscoLeituraCo.log', header = T)
+tabelaDiscoLeituraCo <- analiseDadosMem(tabelaDiscoLeituraCo)
+
+tabelaDiscoEscritaCo <- read.table('../Tabelas/TabelaDiscoEscritaCo.log', header = T)
+tabelaDiscoEscritaCo <- analiseDadosMem(tabelaDiscoEscritaCo)
+
+######################################
+## Analise de NAMD
+######################################
+
+tabelaDadosHT <- read.table('../Tabelas/TabelaNAMDHT.log', header = T)
+tabelaDadosHT <- analiseDadosCPU(tabelaDadosHT)
+
+tabelaDadosSemHT <- read.table('../Tabelas/TabelaNAMDsemHT.log', header = T)
+tabelaDadosSemHT <- analiseDadosCPU(tabelaDadosSemHT)
+
+######################################
+## Analise de Gamess
+######################################
+
+tabelaGamess <- read.table('../Tabelas/TabelasGamess.log', header = T)
+tabelaGamess <- analiseDadosCPU(tabelaGamess)
+
+```
+
+CPUs
+=======================================================================
+
+Row
+-----------------------------------------------------------------------
+
+### Ambientes Comparados
+
+```{r}
+### Gráfico com o tempo médio de desempenho de cada ambiente + intervalo de confiança
+cpuComparaEx <- ggplot(tabelaComparada, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+  geom_bar(position = 'dodge', stat = 'identity') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  labs(x="CPUs", y = "Tempo Médio (seg)") +
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  ylim(0, 115)
+
+ggplotly(cpuComparaEx)
+
+```
+
+
+### Boxplot de Desempenho
+
+```{r}
+
+cpuBoxEx <- ggplot(tabelaComparada2, aes(x=CPUs, y=Tempo, fill=Ambiente)) + 
+  geom_boxplot(outlier.colour="red", outlier.shape=9, outlier.size=1) +
+  labs(x="CPUs", y = "Tempo (seg)") +
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354"))
+  
+ggplotly(cpuBoxEx) %>% layout(boxmode = "group")
+
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Coefiente de Variação
+
+```{r}
+### Gráfico com Coeficiente de Variação dos ambientes 
+### Esse gráfico tem o objetivo de apresentar a variação dos dados obtidos em porcentagem
+cpuCoeficienteEx <- ggplot(tabelaComparada, aes(fill = Ambiente, x = CPUs, y = Coeficiente_Variacao, group = Ambiente)) +
+  geom_bar(position = 'dodge', stat = 'identity') +
+ scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+ scale_y_continuous(limits = c(0,0.16), labels = scales::percent) 
+
+ggplotly(cpuCoeficienteEx)
+
+```
+
+### Comparaçâo com Ambiente Nativo + 10% Overhead
+
+```{r}
+### Plot: bitmap de alcance de desempenho com o tempo Nativo + 10% de overhead
+cpuAlcanceEx10 <- ggplot(tabelaFreq, aes(fill = Ambiente, x = CPUs, y = Desempenho10, group = Ambiente, colour = Ambiente)) +
+  geom_line(position = 'dodge', stat = 'identity', size=1) +
+  scale_color_manual(values=c("#756bb1", "#31a354")) +
+  scale_y_continuous(limits = c(0,1), labels = scales::percent) 
+
+ggplotly(cpuAlcanceEx10)
+
+```
+
+Row
+-----------------------------------------------------------------------
+
+### KVM Exclusivo x KVM Compartilhado
+
+```{r}
+### Gera o gráfico de comparação entre os ambientes com uso Compartilhado x Exclusivo do KVM
+cpuComparaKvm23 <- ggplot(tabelaKvm23, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+  geom_bar(position = 'dodge', stat = 'identity') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca), position='dodge') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  labs(x="CPUs", y = "Tempo Médio (seg)") +
+  scale_fill_manual(values=c("#5e3c99", "#b2abd2", "#e66101", "#fdb863")) +
+  ylim(0, 115)
+  
+ggplotly(cpuComparaKvm23)
+
+```
+
+
+### Xen Exclusivo x Xen Compartilhado
+
+```{r}
+### Gera o gráfico de comparação entre os ambientes com uso Compartilhado x Exclusivo do Xen
+cpuComparaXen23 <- ggplot(tabelaXen23, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+  geom_bar(position = 'dodge', stat = 'identity') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  labs(x="CPUs", y = "Tempo Médio (seg)") +
+  scale_fill_manual(values=c("#7b3294", "#c2a5cf", "#008837", "#a6dba0")) +
+  ylim(0, 100)
+  
+ggplotly(cpuComparaXen23)
+
+```
+
+
+
+Memória
+=======================================================================
+
+Row
+-----------------------------------------------------------------------
+
+### Leitura de Memória Exclusiva
+
+```{r}
+### Gráfico de leitura em memória
+memoriaLeituraEx <- ggplot(tabelaMemEx, aes(fill = Ambiente, x = GB, y = Tempo_Medio, group = Ambiente)) +
+  geom_bar(position = 'dodge', stat = 'identity') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  labs(x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0, 10))
+
+ggplotly(memoriaLeituraEx)
+
+```
+
+### Boxplot Leitura Exclusiva
+
+```{r}
+## Boxplot Leitura Exclusiva
+boxLeituraEx <- ggplot(tabelaBoxLeituraEx, aes(x=GB, y=Tempo, fill=Ambiente)) + 
+  geom_boxplot(outlier.colour="red", outlier.shape=9, outlier.size=1) +
+  labs(x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354"))
+
+ggplotly(boxLeituraEx) %>% layout(boxmode = "group")
+
+```
+
+
+### Coefiente de Variação da Leitura Exclusiva
+
+```{r}
+## Boxplot Leitura Exclusiva
+coeficienteLeituraEx <- ggplot(tabelaMemEx, aes(fill = Ambiente, x = GB, y = Coeficiente_Variacao, group = Ambiente)) +
+  geom_bar(position = 'dodge', stat = 'identity') +
+  labs(x="GB", y = "Coeficiente_Variação (%)") +
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,1), labels = scales::percent) 
+
+ggplotly(coeficienteLeituraEx)
+
+```
+
+
+Row
+-----------------------------------------------------------------------
+
+### Escrita de Memória Exclusiva
+
+```{r}
+### Gráfico de escrita em memória
+memoriaEscritaEx <- ggplot(tabelaEscritaEx, aes(fill = Ambiente, x = GB, y = Tempo_Medio, group = Ambiente)) +
+  geom_bar(position = 'dodge', stat = 'identity') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  labs(x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,30))
+
+ggplotly(memoriaEscritaEx)
+
+```
+
+
+### Boxplot Escrita Exclusiva
+
+```{r}
+## Boxplot Escrita Exclusiva
+boxEscritaEx <- ggplot(tabelaBoxEscritaEx, aes(x=GB, y=Tempo, fill=Ambiente)) + 
+  geom_boxplot(outlier.colour="red", outlier.shape=9, outlier.size=1) +
+  labs(x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354"))
+
+ggplotly(boxEscritaEx) %>% layout(boxmode = "group")
+
+```
+
+### Coeficiente de Variação da Escrita Exclusiva
+
+```{r}
+## Coeficiente de Variação da Escrita Exclusiva
+coeficienteEscritaEx <- ggplot(tabelaEscritaEx, aes(fill = Ambiente, x = GB, y = Coeficiente_Variacao, group = Ambiente)) +
+  geom_bar(position = 'dodge', stat = 'identity') +
+  labs(x="GB", y = "Coeficiente_Variação (%)")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,0.3), labels = scales::percent) 
+
+ggplotly(coeficienteEscritaEx) 
+
+```
+
+
+Row
+-----------------------------------------------------------------------
+
+### Leitura de Memória Compartilhada
+
+```{r}
+
+### Gráfico em barras com o tempo médio de desempenho de cada ambiente + intervalo de confiança
+memoriaLeituraCo <- ggplot(tabelaMemLeituraCo, aes(fill = Ambiente, x = GB, y = Tempo_Medio, group = Ambiente)) +
+  geom_bar(position = 'dodge', stat = 'identity') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  labs(x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#31a354")) +
+  scale_y_continuous(limits = c(0,10))
+
+ggplotly(memoriaLeituraCo)
+
+```
+
+
+### Escrita de Memória Compartilhada
+
+```{r}
+
+### Gráfico em barras com o tempo médio de desempenho de cada ambiente + intervalo de confiança
+memoriaEscritaCo <- ggplot(tabelaEscritaCo, aes(fill = Ambiente, x = GB, y = Tempo_Medio, group = Ambiente)) +
+  geom_bar(position = 'dodge', stat = 'identity') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  labs(x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#31a354")) +
+  scale_y_continuous(limits = c(0,15))
+
+ggplotly(memoriaEscritaCo)
+
+```
+
+
+Disco
+=======================================================================
+
+Row
+-----------------------------------------------------------------------
+
+### Leitura de Disco Exclusiva
+
+
+```{r}
+
+discoLeituraEx <- ggplot(tabelaDiscoLeituraEx, aes(fill = Ambiente, x = GB, y = Tempo_Medio, group = Ambiente)) +
+  geom_bar(position = 'dodge', stat = 'identity') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  labs(x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,170))
+
+ggplotly(discoLeituraEx)
+
+```
+
+
+### Escrita de Disco Exclusiva
+
+
+```{r}
+discoEscritaEx <- ggplot(tabelaDiscoEscritaEx, aes(fill = Ambiente, x = GB, y = Tempo_Medio, group = Ambiente)) +
+  geom_bar(position = 'dodge', stat = 'identity') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  labs(x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,200))
+
+ggplotly(discoEscritaEx)
+
+```
+
+
+Row
+-----------------------------------------------------------------------
+
+### Leitura de Disco Compartilhado
+
+
+```{r}
+### Gráfico em barras com o tempo médio de desempenho de cada ambiente + intervalo de confiança
+discoLeituraCo <- ggplot(tabelaDiscoLeituraCo, aes(fill = Ambiente, x = GB, y = Tempo_Medio, group = Ambiente)) +
+  geom_bar(position = 'dodge', stat = 'identity') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  labs(x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1","#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,400))
+
+ggplotly(discoLeituraCo)
+
+```
+
+
+### Escrita de Disco Compartilhado
+
+
+```{r}
+### Gráfico em barras com o tempo médio de desempenho de cada ambiente + intervalo de confiança
+discoEscritaCo <- ggplot(tabelaDiscoEscritaCo, aes(fill = Ambiente, x = GB, y = Tempo_Medio, group = Ambiente)) +
+  geom_bar(position = 'dodge', stat = 'identity') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  labs(x="GB", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1","#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,400))
+
+ggplotly(discoEscritaCo)
+
+```
+
+
+
+Aplicações
+=======================================================================
+
+Row
+-----------------------------------------------------------------------
+
+### Desempenho do NAMD com HyperThreading
+```{r}
+### Análise de desempenho do NAMD com HyperThreading
+namdHT <- ggplot(tabelaDadosHT, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+  geom_bar(position = 'dodge', stat = 'identity') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  labs(x="CPUs", y = "Nanossegundos")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,2.6))
+
+ggplotly(namdHT)
+
+```
+
+### Desempenho do NAMD sem HyperThreading
+```{r}
+### Análise de desempenho do NAMD sem HyperThreading
+namdSemHT <- ggplot(tabelaDadosSemHT, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+  geom_bar(position = 'dodge', stat = 'identity') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  labs(x="CPUs", y = "Nanossegundos")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+  scale_y_continuous(limits = c(0,2.6))
+
+ggplotly(namdSemHT)
+
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Desempenho do Gamess
+```{r}
+### Análise de desempenho do Gamess sem Hyperthreading
+gamessSemHT <- ggplot(tabelaGamess, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+  geom_bar(position = 'dodge', stat = 'identity') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+                position='dodge') +
+  labs(x="CPUs", y = "Tempo (seg)")+
+  scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354"))
+
+ggplotly(gamessSemHT)
+
+```
+
+### Desempenho de CPU Exclusiva
+```{r}
+
+### Análise de CPU do ambiente comparado
+
+ggplotly(cpuComparaEx)
+
+```
+
+
+
+
+
+
+
+
