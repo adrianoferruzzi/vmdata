@@ -20,6 +20,6 @@ O software R foi utilizado para a análise dos resultados de desempenho, assim c
  <b> Imagens/ </b> - Imagens utilizadas no trabalho; </br>
  <b> Tabelas/ </b> - Tabelas com os dados obtidos nos benchmarks; </br>
  <b> Graficos/ </b> - Gráficos gerados a partir dos scripts e dos dados obtidos. </br>
- <b> Dashboard/ </b> - Dashboard com os gráficos gerados. </br>
+ <b> Dashboard/ </b> - Dashboard com os gráficos gerados. Para ver o Dashboard faça o download do projeto e abra o arquivo Dashboard/Dashboard.html em seu navegador.</br>
 
  <img src="./Imagens/DashboardImage.png" alt="Dashboard" height="600" width="1000"> 
