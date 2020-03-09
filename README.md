@@ -14,5 +14,9 @@ Os ambientes virtuais foram implementados com as seguintes configurações:</br>
 O software R foi utilizado para a análise dos resultados de desempenho, assim como, para a criação dos gráficos. Os arquivos utilizados no projeto estão dispostos nos seguintes diretórios:</br>
 
  <b> ScriptsR/ </b> - Scripts R utilizados no trabalho; </br>
+ <b> Imagens/ </b> - Imagens utilizadas no trabalho; </br>
  <b> Tabelas/ </b> - Tabelas com os dados obtidos nos benchmarks; </br>
  <b> Graficos/ </b> - Gráficos gerados a partir dos scripts e dos dados obtidos. </br>
+ <b> Dashboard/ </b> - Dashboard com os gráficos gerados. </br>
+
+ <img src="./Imagens/DashboardImage.png" alt="Dashboard" height="42" width="42"> 
