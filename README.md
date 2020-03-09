@@ -19,4 +19,4 @@ O software R foi utilizado para a análise dos resultados de desempenho, assim c
  <b> Graficos/ </b> - Gráficos gerados a partir dos scripts e dos dados obtidos. </br>
  <b> Dashboard/ </b> - Dashboard com os gráficos gerados. </br>
 
- <img src="./Imagens/DashboardImage.png" alt="Dashboard" height="800" width="600"> 
+ <img src="./Imagens/DashboardImage.png" alt="Dashboard" height="600" width="800"> 
