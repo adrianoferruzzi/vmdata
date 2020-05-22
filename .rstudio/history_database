@@ -1,0 +1,71 @@
+1589474952242:####
+1589474952243:require(ggplot2)
+1589474952292:require(ggthemes)
+1589474952294:require(dplyr)
+1589474952295:library(stringr)
+1589474952296:library(readr)
+1589474952350:library(grid)
+1589474952377:library("gridExtra")
+1589474952378:library(ggpubr)
+1589474974014:require(ggplot2)
+1589474974016:require(ggthemes)
+1589474974018:require(dplyr)
+1589474974020:library(stringr)
+1589474974021:library(readr)
+1589474974022:library(grid)
+1589474974023:## library("gridExtra")
+1589474974023:library(ggpubr)
+1589474992276:require(ggplot2)
+1589474992278:require(ggthemes)
+1589474992279:require(dplyr)
+1589474992281:library(stringr)
+1589474992282:library(readr)
+1589474992283:library(grid)
+1589475171729:install.packages(stringr)
+1589475171731:install.packages(readr)
+1589475171762:install.packages(grid)
+1589475171763:install.packages("gridExtra")
+1589475201980:install.packages(ggpubr)
+1589475979650:install.packages(stringr)
+1589476042167:install.packages("stringr")
+1589476094243:install.packages("readr")
+1589476124315:install.packages("grid")
+1589476154397:install.packages("gridExtra")
+1589476184474:install.packages("ggpubr")
+1589476220633:require(ggplot2)
+1589476220635:require(ggthemes)
+1589476220636:require(dplyr)
+1589476237383:library(grid, lib.loc = "/usr/local/lib/R/library")
+1589476313451:install.packages("dplyr")
+1589476795114:### Análise de desempenho do NAMD sem HyperThreading
+1589476795115:### Esta análise considera apenas os 3 ambientes
+1589476795115:tabelaDadosSemHT <- read.table('../Tabelas/TabelaNAMDsemHT.log',
+1589476795115:header = T)
+1589476795117:tabelaDadosSemHT <- tabelaDadosSemHT %>%
+1589476795118:group_by(CPUs, Ambiente) %>%
+1589476795118:summarize(Nanosegundos = mean(Tempo),
+1589476795119:Tempo_Minimo = min(Tempo),
+1589476795119:Tempo_Maximo = max(Tempo),
+1589476795120:Desvio_Padrao = sd(Tempo),
+1589476795120:Intervalo_Confianca = (2.042*sd(Tempo))/(sqrt(n())),
+1589476795121:Coeficiente_Variacao = Desvio_Padrao/Nanosegundos,
+1589476795122:)
+1589476795185:# summary(tabelaDados)
+1589476795185:# str(tabelaDados)
+1589476795186:tabelaDadosSemHT$CPUs <- factor(tabelaDadosSemHT$CPUs, levels = c(unique(tabelaDadosSemHT$CPUs)[order(unique(tabelaDadosSemHT$CPUs))]))
+1589476795187:namdSemHT <- ggplot(tabelaDadosSemHT, aes(fill = Ambiente, x = CPUs, y = Nanosegundos, group = Ambiente)) +
+1589476795187:geom_bar(position = 'dodge', stat = 'identity') +
+1589476795188:geom_errorbar(aes(ymin=Nanosegundos - Intervalo_Confianca, ymax=Nanosegundos+Intervalo_Confianca),
+1589476795188:position='dodge') +
+1589476795189:geom_errorbar(aes(ymin=Nanosegundos - Intervalo_Confianca, ymax=Nanosegundos+Intervalo_Confianca),
+1589476795189:position='dodge') +
+1589476795190:labs(title="Sem Hyperthreading",x="CPUs", y = "Nanossegundos / por dia")+
+1589476795190:## scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+1589476795190:scale_y_continuous(limits = c(0,2.6))+
+1589476795191:scale_fill_grey() +
+1589476795191:theme_bw(base_size = 25) +
+1589476795192:theme(legend.position = c(0.3, 0.8))
+1589476795193:## ggsave(filename = "../Graficos/NAMD/04namdSemHT.png", width = 10, height = 7, dpi = 300)
+1589476795194:namdGrafico <- ggarrange(namdHT, namdSemHT, common.legend = TRUE, legend = "bottom")
+1589476795194:ggsave(filename = "./12namdGrafico.png", width = 10, height = 7, dpi = 300)
+1589477266544:require(ggplot2)

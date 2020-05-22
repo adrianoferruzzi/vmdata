@@ -1,0 +1,512 @@
+0:position='dodge') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:labs(title="KVM Exclusivo x KVM Compartilhado",x="CPUs", y = "Tempo Médio (seg)") +
+0:scale_fill_manual(values=c("#5e3c99", "#b2abd2", "#e66101", "#fdb863")) +
+0:ylim(0, 115) +
+0:theme_bw(base_size = 20)
+0:ggsave(filename = "../Graficos/CPU/14cpuComparaKvm23.png", width = 10, height = 7, dpi = 300)
+0:### Gera o data frame de comparação entre os ambientes com uso Compartilhado x Exclusivo do Xen
+0:tabelaXen23 <-tabelaKvm23Xen23  %>%
+0:filter(Ambiente == 'Xen_2_Ex' | Ambiente == 'Xen_2_Co' | Ambiente == 'Xen_3_Ex' | Ambiente == 'Xen_3_Co' )
+0:tabelaXen23 <- tabelaXen23 %>%
+0:group_by(CPUs, Ambiente) %>%
+0:summarize(Tempo_Medio = mean(Tempo),
+0:Tempo_Minimo = min(Tempo),
+0:Tempo_Maximo = max(Tempo),
+0:Desvio_Padrao = sd(Tempo),
+0:Intervalo_Confianca = (2.042*sd(Tempo))/(sqrt(n())))
+0:tabelaXen23$CPUs <- factor(tabelaXen23$CPUs, levels = c(unique(tabelaXen23$CPUs)[order(unique(tabelaXen23$CPUs))]))
+0:### Gera o gráfico de comparação entre os ambientes com uso Compartilhado x Exclusivo do Xen
+0:cpuComparaXen23 <- ggplot(tabelaXen23, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:labs(title="Xen Exclusivo x Xen Compartilhado",x="CPUs", y = "Tempo Médio (seg)") +
+0:scale_fill_manual(values=c("#7b3294", "#c2a5cf", "#008837", "#a6dba0")) +
+0:ylim(0, 115) +
+0:theme_bw(base_size = 20)
+0:ggsave(filename = "../Graficos/CPU/15cpuComparaXen23.png", width = 10, height = 7, dpi = 300)
+0:require(ggplot2)
+0:require(ggthemes)
+0:require(dplyr)
+0:library(stringr)
+0:library(readr)
+0:### Análise de desempenho do ambiente KVM
+0:### Esta análise considera apenas os 3 flavors do ambiente KVM
+0:tabelaDados <- read.table('../Tabelas/TabelaCPUCo.log',
+0:header = T)
+0:tabelaKvm <- tabelaDados
+0:tabelaKvm <- tabelaKvm %>% filter(str_detect(Ambiente, 'kvm_'))
+0:tabelaKvm <- tabelaKvm %>%
+0:group_by(CPUs, Ambiente) %>%
+0:summarize(Tempo_Medio = mean(Tempo),
+0:Tempo_Minimo = min(Tempo),
+0:Tempo_Maximo = max(Tempo),
+0:Desvio_Padrao = sd(Tempo),
+0:Intervalo_Confianca = (2.042*sd(Tempo))/(sqrt(n())))
+0:tabelaKvm$CPUs <- factor(tabelaKvm$CPUs, levels = c(unique(tabelaKvm$CPUs)[order(unique(tabelaKvm$CPUs))]))
+0:ggplot(tabelaKvm, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:scale_fill_manual(values=c("#bcbddc", "#efedf5")) +
+0:labs(title="Desempenho do KVM",x="CPUs", y = "Tempo Médio (seg)")+
+0:ylim(0, 115) +
+0:theme_bw(base_size = 20)
+0:ggplot(tabelaKvm, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:scale_fill_manual(values=c("#6a51a3", "#9e9ac8")) +
+0:labs(title="Desempenho do KVM",x="CPUs", y = "Tempo Médio (seg)")+
+0:ylim(0, 115) +
+0:theme_bw(base_size = 20)
+0:tabelaXen <- tabelaDados
+0:tabelaXen <- tabelaXen %>% filter(str_detect(Ambiente, 'Xen_'))
+0:tabelaXen <- tabelaXen %>%
+0:group_by(CPUs, Ambiente) %>%
+0:summarize(Tempo_Medio = mean(Tempo),
+0:Tempo_Minimo = min(Tempo),
+0:Tempo_Maximo = max(Tempo),
+0:Desvio_Padrao = sd(Tempo),
+0:Intervalo_Confianca = (2.042*sd(Tempo))/(sqrt(n())))
+0:tabelaXen$CPUs <- factor(tabelaXen$CPUs, levels = c(unique(tabelaXen$CPUs)[order(unique(tabelaXen$CPUs))]))
+0:ggplot(tabelaXen, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:labs(title="Desempenho do Xen",x="CPUs", y = "Tempo Médio (seg)") +
+0:scale_fill_manual(values=c("#a1d99b", "#e5f5e0")) +
+0:ylim(0, 115) +
+0:theme_bw(base_size = 20)
+0:cpuXenCo <- ggplot(tabelaXen, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:labs(title="Desempenho do Xen",x="CPUs", y = "Tempo Médio (seg)") +
+0:scale_fill_manual(values=c("#238b45", "#74c476")) +
+0:ylim(0, 115) +
+0:theme_bw(base_size = 20)
+0:ggplot(tabelaXen, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:labs(title="Desempenho do Xen",x="CPUs", y = "Tempo Médio (seg)") +
+0:scale_fill_manual(values=c("#238b45", "#74c476")) +
+0:ylim(0, 115) +
+0:theme_bw(base_size = 20)
+0:tabelaComparada <- tabelaDados %>%
+0:filter(Ambiente == 'Xen_2' | Ambiente == 'Xen_3' | Ambiente == 'kvm_2' | Ambiente == 'kvm_3' )
+0:### Cria uma tabela com as Medidas de Posição e Medidas de Variação
+0:tabelaComparada <- tabelaComparada %>%
+0:group_by(CPUs, Ambiente) %>%
+0:summarize(Tempo_Medio = mean(Tempo),
+0:Tempo_Minimo = min(Tempo),
+0:Tempo_Maximo = max(Tempo),
+0:Desvio_Padrao = sd(Tempo),
+0:Intervalo_Confianca = (2.042*sd(Tempo))/(sqrt(n())),
+0:Coeficiente_Variacao = (Desvio_Padrao/Tempo_Medio),
+0:)
+0:tabelaComparada$CPUs <- factor(tabelaComparada$CPUs, levels = c(unique(tabelaComparada$CPUs)[order(unique(tabelaComparada$CPUs))]))
+0:ggplot(tabelaComparada, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:scale_fill_manual(values=c("#bcbddc", "#efedf5", "#a1d99b", "#e5f5e0")) +
+0:labs(title="KVM x Xen",x="CPUs", y = "Tempo Médio (seg)")+
+0:ylim(0, 115) +
+0:theme_bw(base_size = 20)
+0:ggplot(tabelaComparada, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:scale_fill_manual(values=c("#6a51a3", "#9e9ac8", "#238b45", "#74c476")) +
+0:labs(title="KVM x Xen",x="CPUs", y = "Tempo Médio (seg)")+
+0:ylim(0, 115) +
+0:theme_bw(base_size = 20)
+0:ggplot(tabelaComparada, aes(fill = Ambiente, x = CPUs, y = Coeficiente_Variacao, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:ggtitle("Coefiente de Variação dos Resultados") +
+0:scale_fill_manual(values=c("#bcbddc", "#efedf5", "#a1d99b", "#e5f5e0")) +
+0:theme_bw(base_size = 20) +
+0:scale_y_continuous(limits = c(0,0.2), labels = scales::percent)
+0:ggplot(tabelaComparada, aes(fill = Ambiente, x = CPUs, y = Coeficiente_Variacao, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:ggtitle("Coefiente de Variação dos Resultados") +
+0:scale_fill_manual(values=c("#6a51a3", "#9e9ac8", "#238b45", "#74c476")) +
+0:theme_bw(base_size = 20) +
+0:scale_y_continuous(limits = c(0,0.2), labels = scales::percent)
+0:tabelaComparada <- tabelaDados %>%
+0:filter(Ambiente == 'Xen_2' | Ambiente == 'Xen_3' | Ambiente == 'kvm_2' | Ambiente == 'kvm_3' )
+0:tabelaComparada$CPUs <- factor(tabelaComparada$CPUs, levels = c(unique(tabelaComparada$CPUs)[order(unique(tabelaComparada$CPUs))]))
+0:ggplot(tabelaComparada, aes(x=CPUs, y=Tempo, fill=Ambiente)) +
+0:geom_boxplot(outlier.colour="red", outlier.shape=9, outlier.size=2) +
+0:labs(title="Variação do Tempo de Desempenho",x="CPUs", y = "Tempo (seg)")+
+0:scale_fill_manual(values=c("#bcbddc", "#efedf5", "#a1d99b", "#e5f5e0")) +
+0:theme_bw(base_size = 20)
+0:tabelaDados2 <- read.table('../Tabelas/TabelaCPUEx.log',
+0:header = T)
+0:tabelaKvmXen23Co <- tabelaDados %>%
+0:filter(Ambiente == 'Xen_2' | Ambiente == 'Xen_3' | Ambiente == 'kvm_2' | Ambiente == 'kvm_3' )
+0:write_csv(tabelaKvmXen23Co, "../Tabelas/tabelaKvmXen23Co.csv")
+0:tabelaKvmXen23Ex <- tabelaDados2 %>%
+0:filter(Ambiente == 'Xen_2' | Ambiente == 'Xen_3' | Ambiente == 'kvm_2' | Ambiente == 'kvm_3' )
+0:write_csv(tabelaKvmXen23Ex, "../Tabelas/tabelaKvmXen23Ex.csv")
+0:### Script para modificar os valores de kvm_2 para kvm_2_Co e kvm_2_Ex
+0:### o Script também faz a união dos registros
+0:system('bash -c "./substituicaoTabelasCo.sh"')
+0:tabelaKvm23Xen23 <- read.csv('../Tabelas/tabelaKvmXen23Co.csv',
+0:header = T)
+0:tabelaKvm23 <-tabelaKvm23Xen23  %>%
+0:filter(Ambiente == 'kvm_2_Ex' | Ambiente == 'kvm_2_Co' | Ambiente == 'kvm_3_Ex' | Ambiente == 'kvm_3_Co' )
+0:tabelaKvm23 <- tabelaKvm23 %>%
+0:group_by(CPUs, Ambiente) %>%
+0:summarize(Tempo_Medio = mean(Tempo),
+0:Tempo_Minimo = min(Tempo),
+0:Tempo_Maximo = max(Tempo),
+0:Desvio_Padrao = sd(Tempo),
+0:Intervalo_Confianca = (2.042*sd(Tempo))/(sqrt(n())))
+0:tabelaKvm23$CPUs <- factor(tabelaKvm23$CPUs, levels = c(unique(tabelaKvm23$CPUs)[order(unique(tabelaKvm23$CPUs))]))
+0:ggplot(tabelaKvm23, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:labs(title="KVM Exclusivo x KVM Compartilhado",x="CPUs", y = "Tempo Médio (seg)") +
+0:scale_fill_manual(values=c("#5e3c99", "#b2abd2", "#e66101", "#fdb863")) +
+0:ylim(0, 115) +
+0:theme_bw(base_size = 20)
+0:tabelaXen23 <-tabelaKvm23Xen23  %>%
+0:filter(Ambiente == 'Xen_2_Ex' | Ambiente == 'Xen_2_Co' | Ambiente == 'Xen_3_Ex' | Ambiente == 'Xen_3_Co' )
+0:tabelaXen23 <- tabelaXen23 %>%
+0:group_by(CPUs, Ambiente) %>%
+0:summarize(Tempo_Medio = mean(Tempo),
+0:Tempo_Minimo = min(Tempo),
+0:Tempo_Maximo = max(Tempo),
+0:Desvio_Padrao = sd(Tempo),
+0:Intervalo_Confianca = (2.042*sd(Tempo))/(sqrt(n())))
+0:tabelaXen23$CPUs <- factor(tabelaXen23$CPUs, levels = c(unique(tabelaXen23$CPUs)[order(unique(tabelaXen23$CPUs))]))
+0:ggplot(tabelaXen23, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:labs(title="Xen Exclusivo x Xen Compartilhado",x="CPUs", y = "Tempo Médio (seg)") +
+0:scale_fill_manual(values=c("#7b3294", "#c2a5cf", "#008837", "#a6dba0")) +
+0:ylim(0, 115) +
+0:theme_bw(base_size = 20)
+0:#####
+0:# Script R para análise de desempenho de CPUs com uso compartilhado
+0:# Todas as tabelas são modeladas e todos os gráficos são feitos com este script em R
+0:# Basta executá-lo ... ;)
+0:####
+0:require(ggplot2)
+0:require(ggthemes)
+0:require(dplyr)
+0:library(stringr)
+0:library(readr)
+0:### Análise de desempenho do ambiente KVM
+0:### Esta análise considera apenas os 3 flavors do ambiente KVM
+0:tabelaDados <- read.table('../Tabelas/TabelaCPUCo.log',
+0:header = T)
+0:tabelaKvm <- tabelaDados
+0:tabelaKvm <- tabelaKvm %>% filter(str_detect(Ambiente, 'kvm_'))
+0:tabelaKvm <- tabelaKvm %>%
+0:group_by(CPUs, Ambiente) %>%
+0:summarize(Tempo_Medio = mean(Tempo),
+0:Tempo_Minimo = min(Tempo),
+0:Tempo_Maximo = max(Tempo),
+0:Desvio_Padrao = sd(Tempo),
+0:Intervalo_Confianca = (2.042*sd(Tempo))/(sqrt(n())))
+0:tabelaKvm$CPUs <- factor(tabelaKvm$CPUs, levels = c(unique(tabelaKvm$CPUs)[order(unique(tabelaKvm$CPUs))]))
+0:cpuKvmCo <- ggplot(tabelaKvm, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:scale_fill_manual(values=c("#6a51a3", "#9e9ac8")) +
+0:labs(title="Desempenho do KVM",x="CPUs", y = "Tempo Médio (seg)")+
+0:ylim(0, 115) +
+0:theme_bw(base_size = 20)
+0:ggsave(filename = "../Graficos/CPU/09cpuKvmCo.png", width = 10, height = 7, dpi = 300)
+0:### Análise de desempenho do ambiente Xen
+0:### Esta análise considera apenas os 3 flavors do ambiente Xen
+0:tabelaXen <- tabelaDados
+0:tabelaXen <- tabelaXen %>% filter(str_detect(Ambiente, 'Xen_'))
+0:tabelaXen <- tabelaXen %>%
+0:group_by(CPUs, Ambiente) %>%
+0:summarize(Tempo_Medio = mean(Tempo),
+0:Tempo_Minimo = min(Tempo),
+0:Tempo_Maximo = max(Tempo),
+0:Desvio_Padrao = sd(Tempo),
+0:Intervalo_Confianca = (2.042*sd(Tempo))/(sqrt(n())))
+0:tabelaXen$CPUs <- factor(tabelaXen$CPUs, levels = c(unique(tabelaXen$CPUs)[order(unique(tabelaXen$CPUs))]))
+0:cpuXenCo <- ggplot(tabelaXen, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:labs(title="Desempenho do Xen",x="CPUs", y = "Tempo Médio (seg)") +
+0:scale_fill_manual(values=c("#238b45", "#74c476")) +
+0:ylim(0, 115) +
+0:theme_bw(base_size = 20)
+0:ggsave(filename = "../Graficos/CPU/10cpuXenCo.png", width = 10, height = 7, dpi = 300)
+0:### Análise do ambiente comparado
+0:### Este pedaço do script faz uma comparação entre o ambiente kvm e xen em todos os flavors
+0:### Nesse caso, além do gráfico em barras para fazer a comparação de tempo também
+0:### é utilizado um gráfico de barras para apresentar o coefiente de variação.
+0:tabelaComparada <- tabelaDados %>%
+0:filter(Ambiente == 'Xen_2' | Ambiente == 'Xen_3' | Ambiente == 'kvm_2' | Ambiente == 'kvm_3' )
+0:### Cria uma tabela com as Medidas de Posição e Medidas de Variação
+0:tabelaComparada <- tabelaComparada %>%
+0:group_by(CPUs, Ambiente) %>%
+0:summarize(Tempo_Medio = mean(Tempo),
+0:Tempo_Minimo = min(Tempo),
+0:Tempo_Maximo = max(Tempo),
+0:Desvio_Padrao = sd(Tempo),
+0:Intervalo_Confianca = (2.042*sd(Tempo))/(sqrt(n())),
+0:Coeficiente_Variacao = (Desvio_Padrao/Tempo_Medio),
+0:)
+0:tabelaComparada$CPUs <- factor(tabelaComparada$CPUs, levels = c(unique(tabelaComparada$CPUs)[order(unique(tabelaComparada$CPUs))]))
+0:### Gráfico com o tempo médio de desempenho de cada ambiente + intervalo de confiança
+0:cpuComparaCo <- ggplot(tabelaComparada, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:scale_fill_manual(values=c("#6a51a3", "#9e9ac8", "#238b45", "#74c476")) +
+0:labs(title="KVM x Xen",x="CPUs", y = "Tempo Médio (seg)")+
+0:ylim(0, 115) +
+0:theme_bw(base_size = 20)
+0:ggsave(filename = "../Graficos/CPU/11cpuComparaCo.png", width = 10, height = 7, dpi = 300)
+0:### Gráfico com Coeficiente de Variação dos ambientes
+0:### Esse gráfico tem o objetivo de apresentar a porcentagem de variação dos dados obtidos
+0:cpuCoeficienteCo <- ggplot(tabelaComparada, aes(fill = Ambiente, x = CPUs, y = Coeficiente_Variacao, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:ggtitle("Coefiente de Variação dos Resultados") +
+0:scale_fill_manual(values=c("#6a51a3", "#9e9ac8", "#238b45", "#74c476")) +
+0:theme_bw(base_size = 20) +
+0:scale_y_continuous(limits = c(0,0.2), labels = scales::percent)
+0:ggsave(filename = "../Graficos/CPU/13cpuCoeficienteCo.png", width = 10, height = 7, dpi = 300)
+0:### BoxPlot
+0:### Este gráfico tem o objetivo de verificar a variação dos dados obtidos por meio de quartis
+0:### ele indica a mediana e a variabilidade fora do quartil superior, inferior e outliers
+0:tabelaComparada <- tabelaDados %>%
+0:filter(Ambiente == 'Xen_2' | Ambiente == 'Xen_3' | Ambiente == 'kvm_2' | Ambiente == 'kvm_3' )
+0:tabelaComparada$CPUs <- factor(tabelaComparada$CPUs, levels = c(unique(tabelaComparada$CPUs)[order(unique(tabelaComparada$CPUs))]))
+0:cpuBoxCo <- ggplot(tabelaComparada, aes(x=CPUs, y=Tempo, fill=Ambiente)) +
+0:geom_boxplot(outlier.colour="red", outlier.shape=9, outlier.size=2) +
+0:labs(title="Variação do Tempo de Desempenho",x="CPUs", y = "Tempo (seg)")+
+0:scale_fill_manual(values=c("#bcbddc", "#efedf5", "#a1d99b", "#e5f5e0")) +
+0:theme_bw(base_size = 20)
+0:ggsave(filename = "../Graficos/CPU/12cpuBoxCo.png", width = 10, height = 7, dpi = 300)
+0:#####
+0:## Comparação entre os tempos com uso de CPU exclusivo e compartilhado
+0:## Essa parte do script faz a comparação entre todos os ambiente
+0:## Tempo Exclusivo x Tempo Compartilhado
+0:#####
+0:tabelaDados2 <- read.table('../Tabelas/TabelaCPUEx.log',
+0:header = T)
+0:tabelaKvmXen23Co <- tabelaDados %>%
+0:filter(Ambiente == 'Xen_2' | Ambiente == 'Xen_3' | Ambiente == 'kvm_2' | Ambiente == 'kvm_3' )
+0:write_csv(tabelaKvmXen23Co, "../Tabelas/tabelaKvmXen23Co.csv")
+0:tabelaKvmXen23Ex <- tabelaDados2 %>%
+0:filter(Ambiente == 'Xen_2' | Ambiente == 'Xen_3' | Ambiente == 'kvm_2' | Ambiente == 'kvm_3' )
+0:write_csv(tabelaKvmXen23Ex, "../Tabelas/tabelaKvmXen23Ex.csv")
+0:### Script para modificar os valores de kvm_2 para kvm_2_Co e kvm_2_Ex
+0:### o Script também faz a união dos registros
+0:system('bash -c "./substituicaoTabelasCo.sh"')
+0:tabelaKvm23Xen23 <- read.csv('../Tabelas/tabelaKvmXen23Co.csv',
+0:header = T)
+0:tabelaKvm23 <-tabelaKvm23Xen23  %>%
+0:filter(Ambiente == 'kvm_2_Ex' | Ambiente == 'kvm_2_Co' | Ambiente == 'kvm_3_Ex' | Ambiente == 'kvm_3_Co' )
+0:tabelaKvm23 <- tabelaKvm23 %>%
+0:group_by(CPUs, Ambiente) %>%
+0:summarize(Tempo_Medio = mean(Tempo),
+0:Tempo_Minimo = min(Tempo),
+0:Tempo_Maximo = max(Tempo),
+0:Desvio_Padrao = sd(Tempo),
+0:Intervalo_Confianca = (2.042*sd(Tempo))/(sqrt(n())))
+0:tabelaKvm23$CPUs <- factor(tabelaKvm23$CPUs, levels = c(unique(tabelaKvm23$CPUs)[order(unique(tabelaKvm23$CPUs))]))
+0:### Gera o gráfico de comparação entre os ambientes com uso Compartilhado x Exclusivo do KVM
+0:cpuComparaKvm23 <- ggplot(tabelaKvm23, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:labs(title="KVM Exclusivo x KVM Compartilhado",x="CPUs", y = "Tempo Médio (seg)") +
+0:scale_fill_manual(values=c("#5e3c99", "#b2abd2", "#e66101", "#fdb863")) +
+0:ylim(0, 115) +
+0:theme_bw(base_size = 20)
+0:ggsave(filename = "../Graficos/CPU/14cpuComparaKvm23.png", width = 10, height = 7, dpi = 300)
+0:### Gera o data frame de comparação entre os ambientes com uso Compartilhado x Exclusivo do Xen
+0:tabelaXen23 <-tabelaKvm23Xen23  %>%
+0:filter(Ambiente == 'Xen_2_Ex' | Ambiente == 'Xen_2_Co' | Ambiente == 'Xen_3_Ex' | Ambiente == 'Xen_3_Co' )
+0:tabelaXen23 <- tabelaXen23 %>%
+0:group_by(CPUs, Ambiente) %>%
+0:summarize(Tempo_Medio = mean(Tempo),
+0:Tempo_Minimo = min(Tempo),
+0:Tempo_Maximo = max(Tempo),
+0:Desvio_Padrao = sd(Tempo),
+0:Intervalo_Confianca = (2.042*sd(Tempo))/(sqrt(n())))
+0:tabelaXen23$CPUs <- factor(tabelaXen23$CPUs, levels = c(unique(tabelaXen23$CPUs)[order(unique(tabelaXen23$CPUs))]))
+0:### Gera o gráfico de comparação entre os ambientes com uso Compartilhado x Exclusivo do Xen
+0:cpuComparaXen23 <- ggplot(tabelaXen23, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:labs(title="Xen Exclusivo x Xen Compartilhado",x="CPUs", y = "Tempo Médio (seg)") +
+0:scale_fill_manual(values=c("#7b3294", "#c2a5cf", "#008837", "#a6dba0")) +
+0:ylim(0, 115) +
+0:theme_bw(base_size = 20)
+0:ggsave(filename = "../Graficos/CPU/15cpuComparaXen23.png", width = 10, height = 7, dpi = 300)
+0:require(ggplot2)
+0:require(ggthemes)
+0:require(dplyr)
+0:library(stringr)
+0:library(readr)
+0:library(grid)
+0:library("gridExtra")
+0:library(ggpubr)
+0:### Análise de desempenho do ambiente KVM
+0:### Esta análise considera apenas os 3 flavors do ambiente KVM
+0:tabelaCpuEx <- read.table('../Tabelas/TabelaCPUEx.log',
+0:header = T)
+0:tabelaKvm$CPUs <- factor(tabelaKvm$CPUs, levels = c(unique(tabelaKvm$CPUs)[order(unique(tabelaKvm$CPUs))]))
+0:### Análise do ambiente comparado
+0:### Este script considera uma comparação entre o ambiente Nativo, kvm_1 e xen_1
+0:### Nesse caso, além do gráfico em barras para fazer a comparação de tempo também
+0:### é utilizado um gráfico para apresentar o coefiente de variação.
+0:tabelaComparada <- tabelaCpuEx %>%
+0:filter(Ambiente == 'Xen_1' | Ambiente == 'kvm_1' | Ambiente == 'Nativo' )
+0:### Cria uma tabela com as Medidas de Posição e Medidas de Variação
+0:tabelaComparada <- tabelaComparada %>%
+0:group_by(CPUs, Ambiente) %>%
+0:summarize(Tempo_Medio = mean(Tempo),
+0:Tempo_Minimo = min(Tempo),
+0:Tempo_Maximo = max(Tempo),
+0:Desvio_Padrao = sd(Tempo),
+0:Intervalo_Confianca = (2.042*sd(Tempo))/(sqrt(n())),
+0:Coeficiente_Variacao = Desvio_Padrao/Tempo_Medio,
+0:)
+0:tabelaComparada$CPUs <- factor(tabelaComparada$CPUs, levels = c(unique(tabelaComparada$CPUs)[order(unique(tabelaComparada$CPUs))]))
+0:ggplot(tabelaComparada, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:labs(title=" Ambientes Comparados",x="CPUs", y = "Tempo Médio (seg)") +
+0:ggtitle("Ambientes Comparados") +
+0:## scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+0:## scale_fill_manual(values=c("grey20", "grey50", "grey80")) +
+0:## scale_fill_brewer(palette="Set2") +
+0:ylim(0, 115) +
+0:scale_fill_grey() +
+0:theme_bw(base_size = 30) +
+0:theme(legend.position = c(0.8, 0.75))
+0:cpuComparaEx <- ggplot(tabelaComparada, aes(fill = Ambiente, x = CPUs, y = Tempo_Medio, group = Ambiente)) +
+0:geom_bar(position = 'dodge', stat = 'identity') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:geom_errorbar(aes(ymin=Tempo_Medio - Intervalo_Confianca, ymax=Tempo_Medio+Intervalo_Confianca),
+0:position='dodge') +
+0:labs(title=" Ambientes Comparados",x="CPUs", y = "Tempo Médio (seg)") +
+0:ggtitle("Ambientes Comparados") +
+0:## scale_fill_manual(values=c("#756bb1", "#fdae6b", "#31a354")) +
+0:## scale_fill_manual(values=c("grey20", "grey50", "grey80")) +
+0:## scale_fill_brewer(palette="Set2") +
+0:ylim(0, 115) +
+0:scale_fill_grey() +
+0:theme_bw(base_size = 30) +
+0:theme(legend.position = c(0.8, 0.75))
+0:ggplotly(cpuComparaEx
+0:ggplotly(cpuComparaEx)
+0:tabelaCpuEx <- read.table('../Tabelas/TabelaCPUEx.log', header = T)
+0:tabelaCpuComparaEx <- tabelaCpuEx %>%
+0:filter(Ambiente == 'Xen_1' | Ambiente == 'kvm_1' | Ambiente == 'Nativo' )
+0:require(ggplot2)
+0:require(ggthemes)
+0:require(dplyr)
+0:library(stringr)
+0:library(readr)
+0:library("gridExtra")
+0:library(ggpubr)
+0:library(plotly)
+0:## library(plyr)
+0:library(flexdashboard)
+0:## library(tidyverse)
+0:analiseDadosCPU <- function(dados) {
+0:### Análise do ambiente comparado
+0:### Esta funcao faz uma comparação entre os ambientes
+0:### Nesse caso, além do gráfico em barras para fazer a comparação de tempo também
+0:### é utilizado um gráfico para apresentar o coefiente de variação.
+0:### Cria uma tabela com as Medidas de Posição e Medidas de Variação
+0:tabelaDados <- dados %>%
+0:group_by(CPUs, Ambiente) %>%
+0:summarize(Tempo_Medio = mean(Tempo),
+0:Tempo_Minimo = min(Tempo),
+0:Tempo_Maximo = max(Tempo),
+0:Desvio_Padrao = sd(Tempo),
+0:Intervalo_Confianca = (2.042*sd(Tempo))/(sqrt(n())),
+0:Coeficiente_Variacao = Desvio_Padrao/Tempo_Medio,
+0:)
+0:tabelaDados$CPUs <- factor(tabelaDados$CPUs, levels = c(unique(tabelaDados$CPUs)[order(unique(tabelaDados$CPUs))]))
+0:return(tabelaDados)
+0:}
+0:tabelaCpuEx <- read.table('../Tabelas/TabelaCPUEx.log', header = T)
+0:tabelaCpuComparaEx <- tabelaCpuEx %>%
+0:filter(Ambiente == 'Xen_1' | Ambiente == 'kvm_1' | Ambiente == 'Nativo' )
+0:View(tabelaCpuComparaEx)
+0:eval(parse(text="CPUs"))
+0:tabelaCpuComparaEx$CPUs
+0:tabelaCpuComparaEx$"CPUs"
+0:tabelaCpuComparaEx$paste0("CP", "Us")
+0:tabelaCpuComparaEx$evalparse(text=paste0("CP", "Us")))
+0:tabelaCpuComparaEx$eval(parse(text=paste0("CP", "Us")))
+0:tabelaCpuComparaEx$eval(parse(text=paste0("CP", "Us")))
+0:tabelaCpuComparaEx[[paste0("CP", "Us")]]
+0:analiseDadosCPU <- function(dados, coluna) {
+0:### Análise do ambiente comparado
+0:### Esta funcao faz uma comparação entre os ambientes
+0:### Nesse caso, além do gráfico em barras para fazer a comparação de tempo também
+0:### é utilizado um gráfico para apresentar o coefiente de variação.
+0:### Cria uma tabela com as Medidas de Posição e Medidas de Variação
+0:tabelaDados <- dados %>%
+0:group_by(eval(parse(text=coluna)), Ambiente) %>%
+0:summarize(Tempo_Medio = mean(Tempo),
+0:Tempo_Minimo = min(Tempo),
+0:Tempo_Maximo = max(Tempo),
+0:Desvio_Padrao = sd(Tempo),
+0:Intervalo_Confianca = (2.042*sd(Tempo))/(sqrt(n())),
+0:Coeficiente_Variacao = Desvio_Padrao/Tempo_Medio,
+0:)
+0:tabelaDados[[coluna]] <- factor(tabelaDados[[coluna]], levels = c(unique(tabelaDados[[coluna]])[order(unique(tabelaDados[[coluna]]))]))
+0:return(tabelaDados)
+0:}
+0:tabelaComparada <- analiseDadosCPU(tabelaCpuComparaEx, "CPUs")

@@ -53,7 +53,7 @@ ggsave(filename = "../Graficos/Gamess/03gamessCoeficienteSemHT.png", width = 10,
 ### BoxPlot
 ### Este gráfico tem o objetivo de verificar a variação dos dados obtidos por meio de quartis 
 ### ele indica a mediana e a variabilidade fora do quartil superior, inferior e outliers
-tabelaComparada <- read.table('../Tabelas/TabelaNAMDsemHT.log',
+tabelaComparada <- read.table('../Tabelas/TabelaGamess.log',
                               header = T)
 tabelaComparada$CPUs <- factor(tabelaComparada$CPUs, levels = c(unique(tabelaComparada$CPUs)[order(unique(tabelaComparada$CPUs))]))
 

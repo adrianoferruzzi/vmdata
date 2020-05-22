@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1589474827135.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "2552A72E",
+    "lastKnownWriteTime" : 1583516500,
+    "last_content_update" : 1589476771179,
+    "path" : "~/ScriptsR/99-analiseCompletaWCGA.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "11,0",
+        "scrollLine" : "1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
