@@ -13,6 +13,7 @@ Os ambientes virtuais foram implementados com as seguintes configurações:</br>
   1 - vm-1 : 40 threads, 50GB de memória e 100GB de disco; </br>
   2 - vm-2 : 20 threads, 30GB de memória e 100GB de disco; </br>
   3 - vm-3 : 10 threads, 15GB de memória e 100GB de disco. </br>
+  3 - vm-4 : 4 threads, 5GB de memória e 100GB de disco. </br>
 
 O software R foi utilizado para a análise dos resultados de desempenho, assim como, para a criação dos gráficos. Os arquivos utilizados no projeto estão dispostos nos seguintes diretórios:</br>
 
